@@ -55,10 +55,19 @@ http {
 
 	include /etc/nginx/conf.d/*.conf;
 
+    server {
+        listen       80 default_server;
+        server_name  blank;
+        location = /health-check {
+            access_log off;
+            return 200;
+        }
+    }
+
 	{{range $spec := getvs "/registry/services/specs/*/*"}}
 	{{$data := json $spec}}
-	{{ if $data.annotations.kubernetesReverseproxy }}
-	{{$p := json $data.annotations.kubernetesReverseproxy }}
+	{{ if $data.metadata.annotations.kubernetesReverseproxy }}
+	{{$p := json $data.metadata.annotations.kubernetesReverseproxy }}
 	{{range $proxy := $p.hosts}}
 	{{if $proxy.host }}
 	server {
@@ -98,7 +107,7 @@ http {
 			proxy_set_header Connection "upgrade";
 			{{ end }}
 
-			proxy_pass http://{{$data.portalIP}}:{{$data.port}};
+			proxy_pass http://{{$data.spec.clusterIP}}:{{(index $data.spec.ports 0).port}};
 		}
 		{{ end }}
 
@@ -127,7 +136,7 @@ http {
 			proxy_set_header Connection "upgrade";
 			{{ end }}
 
-			proxy_pass http://{{$data.portalIP}}:{{$data.port}};
+			proxy_pass http://{{$data.spec.clusterIP}}:{{(index $data.spec.ports 0).port}};
 		}
 		{{ end }}
 
