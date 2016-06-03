@@ -1,13 +1,13 @@
 #
 # Reverse proxy for kubernetes
 #
-FROM ubuntu:trusty
+FROM ubuntu:xenial
 
 ENV DEBIAN_FRONTEND noninteractive
 
 # Prepare requirements
 RUN apt-get update -qy && \
-    apt-get install --no-install-recommends -qy software-properties-common
+    apt-get install --no-install-recommends -qy software-properties-common curl
 
 # Install Nginx.
 RUN add-apt-repository -y ppa:nginx/stable && \
@@ -26,6 +26,7 @@ ADD ./src/confd/conf.d/nginx.toml /etc/confd/conf.d/nginx.toml
 ADD ./src/confd/templates/nginx.tmpl /etc/confd/templates/nginx.tmpl
 ADD ./src/confd/confd.toml /etc/confd/confd.toml
 
+ADD ./src/assign_failoverip.sh /assign_failoverip.sh
 ADD ./src/boot.sh /opt/boot.sh
 RUN chmod +x /opt/boot.sh
 

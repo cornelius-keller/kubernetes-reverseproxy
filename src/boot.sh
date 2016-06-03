@@ -3,6 +3,8 @@
 # Fail hard and fast
 set -eo pipefail
 
+. /assign_failoverip.sh
+
 if [ ! -z "$ETCD" ]; then
 	_ETCD=" -node $ETCD"
 fi
