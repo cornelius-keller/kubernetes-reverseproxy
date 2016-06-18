@@ -5,7 +5,9 @@ set -eo pipefail
 
 . /assign_failoverip.sh
 
-if [ ! -z "$ETCD" ]; then
+if [ ! -z "$HOST_IP" ]; then
+	_ETCD=" -node $HOST_IP"
+elif [ ! -z "$ETCD" ]; then
 	_ETCD=" -node $ETCD"
 fi
 
