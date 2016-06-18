@@ -10,8 +10,8 @@ RUN apt-get update -qy && \
     apt-get install --no-install-recommends -qy software-properties-common curl
 
 # Install Nginx.
-RUN add-apt-repository -y ppa:nginx/stable && \
-    apt-get update -q && \
+#RUN add-apt-repository -y ppa:nginx/stable && \
+RUN apt-get update -q && \
     apt-get install --no-install-recommends -qy nginx && \
     chown -R www-data:www-data /var/lib/nginx && \
     rm -f /etc/nginx/sites-available/default
